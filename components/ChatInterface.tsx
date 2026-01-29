@@ -104,24 +104,24 @@ export default function ChatInterface({ className }: ChatInterfaceProps) {
     return (
         <div className={`flex flex-col h-full bg-surface border border-border shadow-sm rounded-3xl overflow-hidden ${className}`}>
             {/* Header */}
-            <header className="flex items-center justify-between px-6 py-3 border-b border-border/50 bg-background/50">
-                <div className="flex items-center gap-3">
-                    <div className="p-1.5 border border-border rounded-full bg-surface">
-                        <Sparkles className="w-4 h-4 text-primary" />
+            <header className="flex items-center justify-between px-4 py-2 md:py-2.5 border-b border-border/50 bg-background/50">
+                <div className="flex items-center gap-2">
+                    <div className="p-1 border border-border rounded-full bg-surface">
+                        <Sparkles className="w-3.5 h-3.5 text-primary" />
                     </div>
                     <div>
-                        <h1 className="text-lg font-medium text-foreground leading-tight">Study Session</h1>
+                        <h1 className="text-sm md:text-base font-medium text-foreground leading-tight">Study Session</h1>
                         <div className="relative">
                             <button
                                 onClick={() => setIsModeOpen(!isModeOpen)}
-                                className="flex items-center gap-1 text-[10px] text-muted hover:text-primary transition-colors font-medium tracking-wide uppercase"
+                                className="flex items-center gap-1 text-[9px] md:text-[10px] text-muted hover:text-primary transition-colors font-medium tracking-wide uppercase"
                             >
                                 {selectedMode} MODE
-                                <ChevronDown className="w-3 h-3" />
+                                <ChevronDown className="w-2.5 h-2.5" />
                             </button>
 
                             {isModeOpen && (
-                                <div className="absolute top-full left-0 mt-2 w-48 bg-surface rounded-xl shadow-lg border border-border py-2 z-50 animate-in fade-in zoom-in-95 duration-200">
+                                <div className="absolute top-full left-0 mt-1 w-40 bg-surface rounded-lg shadow-lg border border-border py-1 z-50 animate-in fade-in zoom-in-95 duration-200">
                                     {MODES.map((mode) => (
                                         <button
                                             key={mode}
@@ -129,7 +129,7 @@ export default function ChatInterface({ className }: ChatInterfaceProps) {
                                                 setSelectedMode(mode);
                                                 setIsModeOpen(false);
                                             }}
-                                            className={`w-full text-left px-5 py-2.5 text-sm hover:bg-surface-hover hover:text-primary transition-colors ${selectedMode === mode ? 'text-primary font-bold bg-surface-hover' : 'text-foreground'}`}
+                                            className={`w-full text-left px-4 py-2 text-xs hover:bg-surface-hover hover:text-primary transition-colors ${selectedMode === mode ? 'text-primary font-bold bg-surface-hover' : 'text-foreground'}`}
                                         >
                                             {mode}
                                         </button>
@@ -179,16 +179,16 @@ export default function ChatInterface({ className }: ChatInterfaceProps) {
             </header >
 
             {/* Chat Area */}
-            <main className="flex-1 overflow-y-auto p-4 md:p-6 space-y-6 custom-scrollbar bg-background">
+            <main className="flex-1 overflow-y-auto p-3 md:p-4 space-y-4 md:space-y-6 custom-scrollbar bg-background">
                 {
                     messages.length === 0 ? (
-                        <div className="flex flex-col items-center justify-center h-full text-center text-muted space-y-4">
-                            <div className="w-16 h-16 border border-border rounded-full flex items-center justify-center bg-white shadow-sm">
-                                <Sparkles className="w-6 h-6 text-secondary" />
+                        <div className="flex flex-col items-center justify-center h-full text-center text-muted space-y-3">
+                            <div className="w-12 h-12 md:w-16 md:h-16 border border-border rounded-full flex items-center justify-center bg-white shadow-sm">
+                                <Sparkles className="w-5 h-5 md:w-6 md:h-6 text-secondary" />
                             </div>
                             <div className="space-y-1">
-                                <h2 className="text-xl text-foreground">Ready to learn?</h2>
-                                <p className="text-xs opacity-70 max-w-xs mx-auto font-light">
+                                <h2 className="text-lg md:text-xl text-foreground">Ready to learn?</h2>
+                                <p className="text-[10px] md:text-xs opacity-70 max-w-xs mx-auto font-light">
                                     I&apos;m set to {selectedMode} mode. Ask me anything.
                                 </p>
                             </div>
@@ -199,9 +199,9 @@ export default function ChatInterface({ className }: ChatInterfaceProps) {
                                 key={idx}
                                 className={`flex w-full ${msg.role === "user" ? "justify-end" : "justify-start"}`}
                             >
-                                <div className={`flex max-w-[90%] gap-3 ${msg.role === "user" ? "flex-row-reverse" : "flex-row"}`}>
+                                <div className={`flex max-w-[95%] md:max-w-[85%] gap-2 md:gap-3 ${msg.role === "user" ? "flex-row-reverse" : "flex-row"}`}>
                                     <div
-                                        className={`flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center border border-border ${msg.role === "user"
+                                        className={`flex-shrink-0 w-6 h-6 md:w-7 md:h-7 rounded-full flex items-center justify-center border border-border ${msg.role === "user"
                                             ? "bg-foreground text-background"
                                             : "bg-surface text-primary"
                                             }`}
@@ -209,7 +209,7 @@ export default function ChatInterface({ className }: ChatInterfaceProps) {
                                         {msg.role === "user" ? <User className="w-3 h-3" /> : <Bot className="w-3 h-3" />}
                                     </div>
                                     <div
-                                        className={`p-4 rounded-2xl text-sm leading-relaxed shadow-sm ${msg.role === "user"
+                                        className={`p-3 md:p-4 rounded-2xl text-sm leading-relaxed shadow-sm ${msg.role === "user"
                                             ? "bg-primary text-white rounded-tr-sm"
                                             : "bg-surface border border-border text-foreground rounded-tl-sm"
                                             }`}
@@ -230,12 +230,12 @@ export default function ChatInterface({ className }: ChatInterfaceProps) {
                 {
                     isLoading && (
                         <div className="flex justify-start w-full animate-pulse">
-                            <div className="flex items-center gap-3">
-                                <div className="w-7 h-7 rounded-full border border-border bg-surface flex items-center justify-center">
+                            <div className="flex items-center gap-2 md:gap-3">
+                                <div className="w-6 h-6 md:w-7 md:h-7 rounded-full border border-border bg-surface flex items-center justify-center">
                                     <Bot className="w-3 h-3 text-muted" />
                                 </div>
-                                <div className="bg-surface border border-border px-4 py-2 rounded-2xl rounded-tl-sm">
-                                    <span className="text-xs text-muted italic">Thinking...</span>
+                                <div className="bg-surface border border-border px-3 py-2 rounded-2xl rounded-tl-sm">
+                                    <span className="text-[10px] md:text-xs text-muted italic">Thinking...</span>
                                 </div>
                             </div>
                         </div>
@@ -245,7 +245,7 @@ export default function ChatInterface({ className }: ChatInterfaceProps) {
             </main >
 
             {/* Input Area */}
-            <footer className="p-4 bg-surface border-t border-border" >
+            <footer className="p-3 md:p-4 bg-surface border-t border-border" >
                 <form
                     onSubmit={sendMessage}
                     className="relative flex items-center gap-2"
@@ -255,15 +255,15 @@ export default function ChatInterface({ className }: ChatInterfaceProps) {
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
                         placeholder="Type a message..."
-                        className="flex-1 p-3 pr-10 rounded-xl border border-border bg-background focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all placeholder-muted text-foreground font-light text-sm"
+                        className="flex-1 p-2.5 pr-8 rounded-lg border border-border bg-background focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all placeholder-muted text-foreground font-light text-xs md:text-sm"
                         disabled={isLoading}
                     />
                     <button
                         type="submit"
                         disabled={!input.trim() || isLoading}
-                        className="absolute right-2 p-1.5 text-primary hover:text-foreground disabled:opacity-30 transition-colors"
+                        className="absolute right-2 p-1 text-primary hover:text-foreground disabled:opacity-30 transition-colors"
                     >
-                        <Send className="w-4 h-4" />
+                        <Send className="w-3.5 h-3.5" />
                     </button>
                 </form>
             </footer >

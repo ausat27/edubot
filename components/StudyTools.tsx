@@ -16,7 +16,7 @@ export default function StudyTools() {
             <div className="flex border-b border-border">
                 <button
                     onClick={() => setActiveTab("focus")}
-                    className={`flex-1 py-2.5 md:py-3 text-center text-sm md:text-base transition-all
+                    className={`flex-1 py-2 md:py-2.5 text-center text-xs md:text-sm transition-all
                         ${activeTab === "focus"
                             ? "text-foreground font-medium bg-surface"
                             : "text-muted bg-surface-hover hover:text-foreground"
@@ -27,7 +27,7 @@ export default function StudyTools() {
                 <div className="w-[1px] bg-border"></div>
                 <button
                     onClick={() => setActiveTab("learn")}
-                    className={`flex-1 py-2.5 md:py-3 text-center text-sm md:text-base transition-all
+                    className={`flex-1 py-2 md:py-2.5 text-center text-xs md:text-sm transition-all
                         ${activeTab === "learn"
                             ? "text-foreground font-medium bg-surface"
                             : "text-muted bg-surface-hover hover:text-foreground"
