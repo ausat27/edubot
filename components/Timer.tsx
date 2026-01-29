@@ -81,19 +81,19 @@ export default function Timer() {
                         </svg>
                     </div>
 
-                    {/* Play Controls - Fixed size for touch targets, but compact layout */}
-                    <div className="flex items-center gap-4 md:gap-6 h-[20%] min-h-[60px] md:min-h-[70px] mt-2">
+                    {/* Play Controls - Explicitly Large */}
+                    <div className="flex items-center gap-4 md:gap-6 h-auto mt-1 md:mt-2">
                         <button
                             onClick={toggleTimer}
-                            className="aspect-square h-full max-h-[80px] rounded-full border-2 border-border flex items-center justify-center hover:bg-surface-hover text-foreground transition-all active:scale-95 shadow-sm bg-background/50"
+                            className="w-14 h-14 md:w-16 md:h-16 rounded-full border-2 border-border flex items-center justify-center hover:bg-surface-hover text-foreground transition-all active:scale-95 shadow-sm bg-background/50 flex-shrink-0"
                         >
-                            {isActive ? <Pause className="w-[60%] h-[60%] fill-current" /> : <Play className="w-[60%] h-[60%] fill-current pl-[10%]" />}
+                            {isActive ? <Pause className="w-8 h-8 fill-current" /> : <Play className="w-8 h-8 fill-current pl-1" />}
                         </button>
                         <button
                             onClick={resetTimer}
-                            className="aspect-square h-full max-h-[80px] rounded-full border-2 border-border flex items-center justify-center hover:bg-surface-hover text-muted hover:text-foreground transition-all shadow-sm bg-background/50"
+                            className="w-14 h-14 md:w-16 md:h-16 rounded-full border-2 border-border flex items-center justify-center hover:bg-surface-hover text-muted hover:text-foreground transition-all shadow-sm bg-background/50 flex-shrink-0"
                         >
-                            <RotateCcw className="w-[60%] h-[60%]" />
+                            <RotateCcw className="w-8 h-8" />
                         </button>
                     </div>
                 </div>
