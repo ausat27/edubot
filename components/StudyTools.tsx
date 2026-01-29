@@ -41,7 +41,7 @@ export default function StudyTools() {
             <div className="flex-1 overflow-hidden relative bg-background">
 
                 {/* Focus Tab Content */}
-                <div className={`h-full flex flex-col gap-2 md:gap-3 p-4 md:p-6 overflow-y-auto md:overflow-hidden ${activeTab === "focus" ? "block" : "hidden"}`}>
+                <div className={`h-full flex flex-col gap-2 md:gap-3 p-3 md:p-4 overflow-y-auto md:overflow-hidden ${activeTab === "focus" ? "block" : "hidden"}`}>
                     <div className="flex-shrink-0 min-h-min bg-surface rounded-2xl overflow-hidden">
                         <Timer />
                     </div>

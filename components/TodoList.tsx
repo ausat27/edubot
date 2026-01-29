@@ -69,8 +69,8 @@ export default function TodoList() {
     };
 
     return (
-        <div className="h-full flex flex-col bg-surface border border-border rounded-2xl p-4 md:p-6 shadow-sm overflow-hidden">
-            <h3 className="text-xl text-foreground mb-4">To-Do List</h3>
+        <div className="h-full flex flex-col bg-surface border border-border rounded-2xl p-3 md:p-4 shadow-sm overflow-hidden">
+            <h3 className="text-base md:text-lg text-foreground mb-2 md:mb-3 font-medium">To-Do List</h3>
 
             <div className="flex-1 min-h-0 overflow-y-auto space-y-1 custom-scrollbar pr-2 pb-4">
                 {loading ? (
