@@ -104,17 +104,17 @@ export default function ChatInterface({ className }: ChatInterfaceProps) {
     return (
         <div className={`flex flex-col h-full bg-surface border border-border shadow-sm rounded-3xl overflow-hidden ${className}`}>
             {/* Header */}
-            <header className="flex items-center justify-between px-8 py-5 border-b border-border/50 bg-background/50">
-                <div className="flex items-center gap-4">
-                    <div className="p-2 border border-border rounded-full bg-surface">
-                        <Sparkles className="w-5 h-5 text-primary" />
+            <header className="flex items-center justify-between px-6 py-3 border-b border-border/50 bg-background/50">
+                <div className="flex items-center gap-3">
+                    <div className="p-1.5 border border-border rounded-full bg-surface">
+                        <Sparkles className="w-4 h-4 text-primary" />
                     </div>
                     <div>
-                        <h1 className="text-xl text-foreground leading-tight">Study Session</h1>
+                        <h1 className="text-lg font-medium text-foreground leading-tight">Study Session</h1>
                         <div className="relative">
                             <button
                                 onClick={() => setIsModeOpen(!isModeOpen)}
-                                className="flex items-center gap-1 text-xs text-muted hover:text-primary transition-colors font-medium tracking-wide uppercase"
+                                className="flex items-center gap-1 text-[10px] text-muted hover:text-primary transition-colors font-medium tracking-wide uppercase"
                             >
                                 {selectedMode} MODE
                                 <ChevronDown className="w-3 h-3" />
@@ -139,7 +139,7 @@ export default function ChatInterface({ className }: ChatInterfaceProps) {
                         </div>
                     </div>
                 </div>
-                <div className="flex gap-2">
+                <div className="flex gap-1">
                     <button
                         onClick={async () => {
                             if (messages.length === 0) return;
@@ -163,14 +163,14 @@ export default function ChatInterface({ className }: ChatInterfaceProps) {
                                 alert("Failed to save note.");
                             }
                         }}
-                        className="p-2 text-muted hover:text-primary transition-all"
+                        className="p-1.5 text-muted hover:text-primary transition-all"
                         title="Save as Note"
                     >
-                        <Save className="w-5 h-5" />
+                        <Save className="w-4 h-4" />
                     </button>
                     <button
                         onClick={resetChat}
-                        className="p-2 text-muted hover:text-foreground transition-all"
+                        className="p-1.5 text-muted hover:text-foreground transition-all"
                         title="Reset Chat"
                     >
                         <RefreshCw className="w-4 h-4" />
@@ -179,16 +179,16 @@ export default function ChatInterface({ className }: ChatInterfaceProps) {
             </header >
 
             {/* Chat Area */}
-            < main className="flex-1 overflow-y-auto p-8 space-y-8 custom-scrollbar bg-background" >
+            <main className="flex-1 overflow-y-auto p-4 md:p-6 space-y-6 custom-scrollbar bg-background">
                 {
                     messages.length === 0 ? (
-                        <div className="flex flex-col items-center justify-center h-full text-center text-muted space-y-6">
-                            <div className="w-20 h-20 border border-border rounded-full flex items-center justify-center bg-white shadow-sm">
-                                <Sparkles className="w-8 h-8 text-secondary" />
+                        <div className="flex flex-col items-center justify-center h-full text-center text-muted space-y-4">
+                            <div className="w-16 h-16 border border-border rounded-full flex items-center justify-center bg-white shadow-sm">
+                                <Sparkles className="w-6 h-6 text-secondary" />
                             </div>
-                            <div className="space-y-2">
-                                <h2 className="text-2xl text-foreground">Ready to learn?</h2>
-                                <p className="text-sm opacity-70 max-w-xs mx-auto font-light">
+                            <div className="space-y-1">
+                                <h2 className="text-xl text-foreground">Ready to learn?</h2>
+                                <p className="text-xs opacity-70 max-w-xs mx-auto font-light">
                                     I&apos;m set to {selectedMode} mode. Ask me anything.
                                 </p>
                             </div>
@@ -199,17 +199,17 @@ export default function ChatInterface({ className }: ChatInterfaceProps) {
                                 key={idx}
                                 className={`flex w-full ${msg.role === "user" ? "justify-end" : "justify-start"}`}
                             >
-                                <div className={`flex max-w-[85%] gap-4 ${msg.role === "user" ? "flex-row-reverse" : "flex-row"}`}>
+                                <div className={`flex max-w-[90%] gap-3 ${msg.role === "user" ? "flex-row-reverse" : "flex-row"}`}>
                                     <div
-                                        className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center border border-border ${msg.role === "user"
+                                        className={`flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center border border-border ${msg.role === "user"
                                             ? "bg-foreground text-background"
                                             : "bg-surface text-primary"
                                             }`}
                                     >
-                                        {msg.role === "user" ? <User className="w-4 h-4" /> : <Bot className="w-4 h-4" />}
+                                        {msg.role === "user" ? <User className="w-3 h-3" /> : <Bot className="w-3 h-3" />}
                                     </div>
                                     <div
-                                        className={`p-6 rounded-2xl text-base leading-relaxed shadow-sm ${msg.role === "user"
+                                        className={`p-4 rounded-2xl text-sm leading-relaxed shadow-sm ${msg.role === "user"
                                             ? "bg-primary text-white rounded-tr-sm"
                                             : "bg-surface border border-border text-foreground rounded-tl-sm"
                                             }`}
@@ -230,11 +230,11 @@ export default function ChatInterface({ className }: ChatInterfaceProps) {
                 {
                     isLoading && (
                         <div className="flex justify-start w-full animate-pulse">
-                            <div className="flex items-center gap-4">
-                                <div className="w-8 h-8 rounded-full border border-border bg-surface flex items-center justify-center">
-                                    <Bot className="w-4 h-4 text-muted" />
+                            <div className="flex items-center gap-3">
+                                <div className="w-7 h-7 rounded-full border border-border bg-surface flex items-center justify-center">
+                                    <Bot className="w-3 h-3 text-muted" />
                                 </div>
-                                <div className="bg-surface border border-border px-4 py-3 rounded-2xl rounded-tl-sm">
+                                <div className="bg-surface border border-border px-4 py-2 rounded-2xl rounded-tl-sm">
                                     <span className="text-xs text-muted italic">Thinking...</span>
                                 </div>
                             </div>
@@ -245,25 +245,25 @@ export default function ChatInterface({ className }: ChatInterfaceProps) {
             </main >
 
             {/* Input Area */}
-            < footer className="p-6 bg-surface border-t border-border" >
+            <footer className="p-4 bg-surface border-t border-border" >
                 <form
                     onSubmit={sendMessage}
-                    className="relative flex items-center gap-3"
+                    className="relative flex items-center gap-2"
                 >
                     <input
                         type="text"
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
                         placeholder="Type a message..."
-                        className="flex-1 p-4 pr-12 rounded-xl border border-border bg-background focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all placeholder-muted text-foreground font-light"
+                        className="flex-1 p-3 pr-10 rounded-xl border border-border bg-background focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all placeholder-muted text-foreground font-light text-sm"
                         disabled={isLoading}
                     />
                     <button
                         type="submit"
                         disabled={!input.trim() || isLoading}
-                        className="absolute right-3 p-2 text-primary hover:text-foreground disabled:opacity-30 transition-colors"
+                        className="absolute right-2 p-1.5 text-primary hover:text-foreground disabled:opacity-30 transition-colors"
                     >
-                        <Send className="w-5 h-5" />
+                        <Send className="w-4 h-4" />
                     </button>
                 </form>
             </footer >
