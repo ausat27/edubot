@@ -85,15 +85,15 @@ export default function Timer() {
                     <div className="flex items-center gap-4 md:gap-6 h-auto mt-1 md:mt-2">
                         <button
                             onClick={toggleTimer}
-                            className="w-14 h-14 md:w-16 md:h-16 rounded-full border-2 border-border flex items-center justify-center hover:bg-surface-hover text-foreground transition-all active:scale-95 shadow-sm bg-background/50 flex-shrink-0"
+                            className="w-12 h-12 md:w-14 md:h-14 rounded-full border-2 border-border flex items-center justify-center hover:bg-surface-hover text-foreground transition-all active:scale-95 shadow-sm bg-background/50 flex-shrink-0"
                         >
-                            {isActive ? <Pause className="w-8 h-8 fill-current" /> : <Play className="w-8 h-8 fill-current pl-1" />}
+                            {isActive ? <Pause className="w-6 h-6 fill-current" /> : <Play className="w-6 h-6 fill-current pl-1" />}
                         </button>
                         <button
                             onClick={resetTimer}
-                            className="w-14 h-14 md:w-16 md:h-16 rounded-full border-2 border-border flex items-center justify-center hover:bg-surface-hover text-muted hover:text-foreground transition-all shadow-sm bg-background/50 flex-shrink-0"
+                            className="w-12 h-12 md:w-14 md:h-14 rounded-full border-2 border-border flex items-center justify-center hover:bg-surface-hover text-muted hover:text-foreground transition-all shadow-sm bg-background/50 flex-shrink-0"
                         >
-                            <RotateCcw className="w-8 h-8" />
+                            <RotateCcw className="w-6 h-6" />
                         </button>
                     </div>
                 </div>
@@ -108,7 +108,7 @@ export default function Timer() {
                             <button
                                 key={min}
                                 onClick={() => { setInitialTime(min * 60); setTimeLeft(min * 60); setIsActive(false); }}
-                                className={`text-xs px-3 py-1.5 rounded-md border text-center transition-all whitespace-nowrap min-w-[3.5rem] ${initialTime === min * 60
+                                className={`text-[10px] md:text-xs px-2 py-1 rounded-md border text-center transition-all whitespace-nowrap min-w-[3rem] ${initialTime === min * 60
                                     ? "bg-secondary/30 border-secondary text-foreground font-medium"
                                     : "border-transparent bg-background/50 hover:bg-surface-hover text-muted hover:text-foreground hover:border-border/50"
                                     }`}
