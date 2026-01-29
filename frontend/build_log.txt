@@ -1,0 +1,25 @@
+
+> frontend@0.1.0 build
+> next build
+
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+▲ Next.js 16.1.6 (Turbopack)
+
+  Creating an optimized production build ...
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+✓ Compiled successfully in 5.0s
+  Running TypeScript ...
+Failed to compile.
+
+./components/WeeklyPlanner.tsx:331:83
+Type error: Type '"study" | "break" | "exam" | "deadline"' is not assignable to type '"study"'.
+  Type '"break"' is not assignable to type '"study"'.
+
+[0m [90m 329 |[39m                                         className[33m=[39m[32m"w-full p-2 rounded-lg border border-border bg-surface outline-none"[39m
+ [90m 330 |[39m                                         value[33m=[39m{newEvent[33m.[39mtype}
+[31m[1m>[22m[39m[90m 331 |[39m                                         onChange[33m=[39m{e [33m=>[39m setNewEvent({ [33m...[39mnewEvent[33m,[39m type[33m:[39m e[33m.[39mtarget[33m.[39mvalue [36mas[39m [32m"study"[39m [33m|[39m [32m"exam"[39m [33m|[39m [32m"deadline"[39m [33m|[39m [32m"break"[39m })}
+ [90m     |[39m                                                                                   [31m[1m^[22m[39m
+ [90m 332 |[39m                                     [33m>[39m
+ [90m 333 |[39m                                         [33m<[39m[33moption[39m value[33m=[39m[32m"study"[39m[33m>[39m[33mStudy[39m[33m<[39m[33m/[39m[33moption[39m[33m>[39m
+ [90m 334 |[39m                                         [33m<[39m[33moption[39m value[33m=[39m[32m"exam"[39m[33m>[39m[33mExam[39m[33m<[39m[33m/[39m[33moption[39m[33m>[39m[0m
+Next.js build worker exited with code: 1 and signal: null

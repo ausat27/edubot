@@ -18,12 +18,18 @@ export default function WeeklyPlanner() {
     const [events, setEvents] = useState<PlannerEvent[]>([]);
     const [currentWeekStart, setCurrentWeekStart] = useState(getMonday(new Date()));
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-    const [newEvent, setNewEvent] = useState({
+    const [newEvent, setNewEvent] = useState<{
+        title: string;
+        day: string;
+        startHour: string;
+        duration: number;
+        type: 'study' | 'break' | 'exam' | 'deadline';
+    }>({
         title: "",
         day: "Mon",
         startHour: "09:00",
         duration: 1, // hours
-        type: "study" as const
+        type: "study"
     });
     const [loading, setLoading] = useState(true);
 
