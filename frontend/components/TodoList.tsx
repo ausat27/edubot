@@ -72,7 +72,7 @@ export default function TodoList() {
         <div className="h-full flex flex-col bg-surface border border-border rounded-2xl p-4 md:p-6 shadow-sm overflow-hidden">
             <h3 className="text-xl text-foreground mb-4">To-Do List</h3>
 
-            <div className="flex-1 overflow-y-auto space-y-1 custom-scrollbar pr-2">
+            <div className="flex-1 min-h-0 overflow-y-auto space-y-1 custom-scrollbar pr-2 pb-4">
                 {loading ? (
                     <div className="flex justify-center py-4"><Loader2 className="w-5 h-5 animate-spin text-muted" /></div>
                 ) : tasks.length === 0 ? (

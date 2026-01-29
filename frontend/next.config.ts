@@ -11,19 +11,23 @@ const nextConfig: NextConfig = {
       },
       {
         source: '/tasks',
-        destination: `${backendUrl}/tasks`,
+        destination: `${backendUrl}/api/tasks`,
       },
       {
         source: '/tasks/:path*',
-        destination: `${backendUrl}/tasks/:path*`,
+        destination: `${backendUrl}/api/tasks/:path*`,
       },
       {
         source: '/chat',
-        destination: `${backendUrl}/chat`,
+        destination: `${backendUrl}/api/chat`,
       },
       {
         source: '/reset',
-        destination: `${backendUrl}/reset`,
+        destination: `${backendUrl}/api/reset`,
+      },
+      {
+        source: '/history/:path*',
+        destination: `${backendUrl}/api/history/:path*`,
       },
     ];
   },

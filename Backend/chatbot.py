@@ -1,204 +1,106 @@
-
-from dotenv import load_dotenv
-import google.generativeai as genai
-from supabase import create_client, Client
 import os
-import json
+from dotenv import load_dotenv
+from services.storage import JsonStorageService, SupabaseStorageService
+from services.llm import MockLLMService, GeminiLLMService
 
-# Load API key
+# Load environment variables
 load_dotenv()
-genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
+
+MOCK_MODE = os.getenv("MOCK_MODE", "false").lower() == "true"
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_KEY = os.getenv("SUPABASE_KEY")
 
-supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
+# --- Service Initialization ---
+print(f"DEBUG: Initializing Backend. Mock Mode: {MOCK_MODE}")
 
-# This list will store conversation history
-chat_history = []
+if MOCK_MODE:
+    storage_service = JsonStorageService()
+    llm_service = MockLLMService()
+else:
+    # Storage Init
+    if not SUPABASE_URL or not SUPABASE_KEY:
+        print("CRITICAL WARNING: Supabase credentials missing. Falling back to JSON Storage.")
+        storage_service = JsonStorageService()
+    else:
+        try:
+            storage_service = SupabaseStorageService(SUPABASE_URL, SUPABASE_KEY)
+        except Exception as e:
+            print(f"Error initializing Supabase: {e}. Falling back to JSON.")
+            storage_service = JsonStorageService()
+
+    # LLM Init
+    if not GEMINI_API_KEY:
+        print("CRITICAL WARNING: Gemini API Key missing. Falling back to Mock LLM.")
+        llm_service = MockLLMService()
+    else:
+        llm_service = GeminiLLMService(GEMINI_API_KEY)
+
+
+# --- Core Chatbot Functions ---
 
 def ask_gemini(user_input: str, conversation_id: str = None, mode: str = "University") -> str:
-    print(f"DEBUG: ask_gemini called with input: {user_input}, conversation_id: {conversation_id}, mode: {mode}", flush=True)
-    try:
-        # Switched to gemini-2.0-flash-lite for better rate limits
-        model = genai.GenerativeModel("gemini-2.0-flash-lite")
-
-        # Save user message
-        print("DEBUG: Saving user message...", flush=True)
-        save_message("user", user_input, conversation_id)
-        print("DEBUG: User message saved.", flush=True)
-
-        # Load all chat history from database
-        print("DEBUG: Loading chat history...", flush=True)
-        chat_history = load_chat_history(conversation_id)
-        print(f"DEBUG: Chat history loaded. Count: {len(chat_history)}", flush=True)
-
-        # Build context
-        context = "\n".join(f"{msg['role'].capitalize()}: {msg['message']}" for msg in chat_history)
-
-        # Define mode-specific instructions
-        mode_instructions = {
-            "School": "Explain things simply, using analogies suitable for a school student. Avoid complex jargon.",
-            "High School": "Explain with moderate detail, suitable for a high school student. Prepare them for exams.",
-            "College": "Explain with academic rigor, suitable for a college student. Focus on concepts and applications.",
-            "University": "Explain with deep technical detail, suitable for a university student. Cite theories and advanced concepts.",
-            "Researcher": "Provide comprehensive, highly technical responses with references to current research. Assume expert knowledge."
-        }
-        
-        selected_instruction = mode_instructions.get(mode, mode_instructions["University"])
-
-        full_prompt = f"""
-        You are a warm, friendly, and encouraging educational assistant and an intelligent AI tutor.
-        Current Mode: {mode}
-        Instruction: {selected_instruction}
-
-        Continue the conversation naturally, using the previous context.
-        Guidelines for your response:
-        - Be concise, clear, and educational.
-        - Maintain a polite and warm tone.
-        - Focus only on what the student asked.
-        - After explaining, end by gently asking if the student needs more help.
-
-        Conversation so far:
-        {context}
-        """
-
-        # Generate response
-        print("DEBUG: Generating content with Gemini...", flush=True)
-        response = model.generate_content(full_prompt)
-        print(f"DEBUG: Gemini response received: {response}", flush=True)
-        bot_reply = response.text if hasattr(response, "text") else response.candidates[0].content.parts[0].text
-        print(f"DEBUG: Bot reply text: {bot_reply}", flush=True)
-
-        # Save bot reply
-        print("DEBUG: Saving bot reply...", flush=True)
-        save_message("assistant", bot_reply, conversation_id)
-        print("DEBUG: Bot reply saved.", flush=True)
-
-        return bot_reply
-
-    except Exception as e:
-        print(f"DEBUG: Exception occurred: {e}", flush=True)
-        return f"Error: {str(e)}"
-
-def save_message(role, message, conversation_id=None):
-    data = {
-        "role": role,
-        "message": message
-    }
+    print(f"DEBUG: ask_gemini called. Mode: {mode}")
+    
+    # 1. Save User Message
     if conversation_id:
-        data["conversation_id"] = conversation_id
+        storage_service.save_message("user", user_input, conversation_id)
+    
+    # 2. Load History
+    history = []
+    if conversation_id:
+        history = storage_service.load_chat_history(conversation_id)
         
-    supabase.table("chat_history").insert(data).execute()
+    # 3. Generate Response
+    response = llm_service.generate_response(user_input, history, mode)
+    
+    # 4. Save Bot Response
+    if conversation_id:
+        storage_service.save_message("assistant", response, conversation_id)
+        
+    return response
 
 def load_chat_history(conversation_id=None):
-    query = supabase.table("chat_history").select("*").order("timestamp", desc=False)
-    if conversation_id:
-        query = query.eq("conversation_id", conversation_id)
-    response = query.execute()
-    return response.data
+    return storage_service.load_chat_history(conversation_id)
 
 def reset_chat_history(conversation_id):
-    if conversation_id:
-        supabase.table("chat_history").delete().eq("conversation_id", conversation_id).execute()
-        return {"message": "Chat history reset"} # Return expected dict
-    return {"message": "No ID provided"}
+    return storage_service.reset_chat_history(conversation_id)
+
+# --- Study Tools ---
+
+def generate_flashcards(topic: str):
+    return llm_service.generate_flashcards(topic)
+
+def generate_quiz(topic: str):
+    return llm_service.generate_quiz(topic)
+
+def generate_study_note(text: str):
+    return llm_service.generate_study_note(text)
 
 # --- Task Management ---
 
 def get_tasks():
-    response = supabase.table("tasks").select("*").order("created_at", desc=True).execute()
-    return response.data
+    return storage_service.get_tasks()
 
 def create_task(title: str):
-    data = {"title": title, "completed": False}
-    response = supabase.table("tasks").insert(data).execute()
-    return response.data[0] if response.data else None
+    return storage_service.create_task(title)
 
 def update_task(task_id: int, completed: bool):
-    response = supabase.table("tasks").update({"completed": completed}).eq("id", task_id).execute()
-    return response.data[0] if response.data else None
+    return storage_service.update_task(task_id, completed)
 
 def delete_task(task_id: int):
-    supabase.table("tasks").delete().eq("id", task_id).execute()
+    storage_service.delete_task(task_id)
 
 def delete_completed_tasks():
-    supabase.table("tasks").delete().eq("completed", True).execute()
+    storage_service.delete_completed_tasks()
 
-# --- Study Tools Generation ---
+# --- Notes Management ---
 
-def generate_flashcards(topic: str) -> list[dict]:
-    """Generates 5-10 flashcards for a given topic using Gemini."""
-    model = genai.GenerativeModel('gemini-2.0-flash-lite')
-    prompt = f"""
-    Create a set of 5 to 10 educational flashcards about "{topic}".
-    Return ONLY a raw JSON array of objects. No markdown formatting.
-    Each object must have:
-    - "front": The question or concept (string).
-    - "back": The answer or definition (string).
+def create_note(title: str, content: str, summary: str):
+    return storage_service.create_note(title, content, summary)
 
-    Example output:
-    [
-        {{"front": "What is Mitochondria?", "back": "Powerhouse of the cell"}},
-        {{"front": "Define Osmosis", "back": "Movement of water..."}}
-    ]
-    """
-    try:
-        response = model.generate_content(prompt)
-        # Clean potential markdown code blocks
-        clean_text = response.text.replace("```json", "").replace("```", "").strip()
-        flashcards = json.loads(clean_text)
-        return flashcards
-    except Exception as e:
-        print(f"Error generating flashcards: {e}")
-        return []
+def get_notes():
+    return storage_service.get_notes()
 
-def generate_quiz(topic: str) -> dict:
-    """Generates a flexible multiple-choice quiz for a topic."""
-    model = genai.GenerativeModel('gemini-2.0-flash-lite')
-    prompt = f"""
-    Create a 5-question multiple choice quiz about "{topic}".
-    Return ONLY a raw JSON object. No markdown.
-    Structure:
-    {{
-        "title": "Quiz Title",
-        "questions": [
-            {{
-                "id": 1,
-                "question": "Question text?",
-                "options": ["A", "B", "C", "D"],
-                "correct_answer": "Correct Option Text" 
-            }}
-        ]
-    }}
-    """
-    try:
-        response = model.generate_content(prompt)
-        clean_text = response.text.replace("```json", "").replace("```", "").strip()
-        quiz = json.loads(clean_text)
-        return quiz
-    except Exception as e:
-        print(f"Error generating quiz: {e}")
-        return {"title": "Error", "questions": []}
-
-def generate_study_note(text: str) -> str:
-    """Generates a structured, markdown-formatted study note from a chat log."""
-    model = genai.GenerativeModel('gemini-2.0-flash-lite')
-    prompt = f"""
-    You are an expert student aid. Convert the following chat transcript into a comprehensive, well-structured study note (Markdown).
-    
-    Guidelines:
-    - **Filter out small talk**: Ignore greetings ("hello", "thanks") and focus purely on the educational content.
-    - **Structure**: Use H2 headers (##) for main topics.
-    - **Key Concepts**: Define important terms clearly.
-    - **Bullets**: Use bullet points for readability.
-    - **Tone**: Professional, concise, and academic.
-    
-    Transcript:
-    {text}
-    """
-    try:
-        response = model.generate_content(prompt)
-        return response.text.strip()
-    except Exception as e:
-        print(f"Error generating study note: {e}")
-        return "Could not generate study note from this session."
+def delete_note(note_id: int):
+    storage_service.delete_note(note_id)

@@ -59,7 +59,7 @@ export default function Home() {
         </div>
 
         {/* Main Content Grid */}
-        <div className="flex-1 h-full gap-6 grid grid-cols-1 lg:grid-cols-12">
+        <div className="flex-1 h-full gap-6 grid grid-cols-1 lg:grid-cols-12 min-h-0">
 
           {/* Dynamic Center Panel */}
           <div className="h-full lg:col-span-8 flex flex-col min-h-0">
@@ -79,7 +79,7 @@ export default function Home() {
           </div>
 
           {/* Right Panel - Tools */}
-          <div className="h-full lg:col-span-4 hidden lg:block">
+          <div className="h-full lg:col-span-4 hidden lg:flex lg:flex-col lg:min-h-0">
             <StudyTools />
           </div>
 
