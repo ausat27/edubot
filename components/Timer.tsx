@@ -82,18 +82,18 @@ export default function Timer() {
                     </div>
 
                     {/* Play Controls - Fixed size for touch targets, but compact layout */}
-                    <div className="flex items-center gap-3 md:gap-4 h-[15%] min-h-[40px]">
+                    <div className="flex items-center gap-3 md:gap-5 h-[15%] min-h-[50px] md:min-h-[60px] mt-2">
                         <button
                             onClick={toggleTimer}
-                            className="aspect-square h-full max-h-[50px] rounded-full border border-border flex items-center justify-center hover:bg-surface-hover text-foreground transition-all active:scale-95 shadow-sm bg-background/50"
+                            className="aspect-square h-full max-h-[64px] rounded-full border border-border flex items-center justify-center hover:bg-surface-hover text-foreground transition-all active:scale-95 shadow-sm bg-background/50"
                         >
-                            {isActive ? <Pause className="w-[40%] h-[40%] fill-current" /> : <Play className="w-[40%] h-[40%] fill-current pl-[5%]" />}
+                            {isActive ? <Pause className="w-[50%] h-[50%] fill-current" /> : <Play className="w-[50%] h-[50%] fill-current pl-[10%]" />}
                         </button>
                         <button
                             onClick={resetTimer}
-                            className="aspect-square h-full max-h-[50px] rounded-full border border-border flex items-center justify-center hover:bg-surface-hover text-muted hover:text-foreground transition-all shadow-sm bg-background/50"
+                            className="aspect-square h-full max-h-[64px] rounded-full border border-border flex items-center justify-center hover:bg-surface-hover text-muted hover:text-foreground transition-all shadow-sm bg-background/50"
                         >
-                            <RotateCcw className="w-[40%] h-[40%]" />
+                            <RotateCcw className="w-[50%] h-[50%]" />
                         </button>
                     </div>
                 </div>
