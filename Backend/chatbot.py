@@ -41,24 +41,41 @@ else:
 
 def ask_gemini(user_input: str, conversation_id: str = None, mode: str = "University") -> str:
     print(f"DEBUG: ask_gemini called. Mode: {mode}")
-    
-    # 1. Save User Message
-    if conversation_id:
-        storage_service.save_message("user", user_input, conversation_id)
-    
-    # 2. Load History
-    history = []
-    if conversation_id:
-        history = storage_service.load_chat_history(conversation_id)
+    try:
+        # 1. Save User Message
+        if conversation_id:
+            try:
+                storage_service.save_message("user", user_input, conversation_id)
+            except Exception as e:
+                print(f"Error saving user message: {e}")
+
+        # 2. Load History
+        history = []
+        if conversation_id:
+            try:
+                history = storage_service.load_chat_history(conversation_id)
+            except Exception as e:
+                print(f"Error loading history: {e}")
+            
+        # 3. Generate Response
+        try:
+            response = llm_service.generate_response(user_input, history, mode)
+        except Exception as e:
+             response = f"Error generating response: {e}"
+             print(response)
         
-    # 3. Generate Response
-    response = llm_service.generate_response(user_input, history, mode)
-    
-    # 4. Save Bot Response
-    if conversation_id:
-        storage_service.save_message("assistant", response, conversation_id)
-        
-    return response
+        # 4. Save Bot Response
+        if conversation_id:
+            try:
+                storage_service.save_message("assistant", response, conversation_id)
+            except Exception as e:
+                print(f"Error saving bot response: {e}")
+            
+        return response
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return f"CRITICAL BACKEND ERROR: {str(e)}"
 
 def load_chat_history(conversation_id=None):
     return storage_service.load_chat_history(conversation_id)
