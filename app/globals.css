@@ -6,19 +6,13 @@
   --foreground: #e0e0e0;
 
   --primary: #8a9185;
-  /* Slightly lighter Olive for dark bg */
   --primary-hover: #767b71;
 
   --secondary: #4a4a4a;
-  /* Dark Taupe */
-
   --surface: #262626;
-  /* Dark Grey Surface */
   --surface-hover: #2f2f2f;
 
   --border: #333333;
-  /* Dark Border */
-
   --muted: #888888;
   --muted-light: #404040;
 
@@ -27,23 +21,6 @@
   --glass-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 
   --font-serif: "Georgia", "Times New Roman", serif;
-}
-
-/* Optional Light Mode Class */
-.light-mode {
-  --background: #f9f6f1;
-  --foreground: #2d2d2d;
-  --primary: #767b71;
-  --primary-hover: #5e6359;
-  --secondary: #d6cfc7;
-  --surface: #ffffff;
-  --surface-hover: #f7f5f0;
-  --border: #ebe5de;
-  --muted: #999999;
-  --muted-light: #e0e0e0;
-  --glass-bg: #ffffff;
-  --glass-border: #ebe5de;
-  --glass-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 @theme inline {
@@ -57,43 +34,48 @@
   --color-border: var(--border);
   --color-muted: var(--muted);
   --color-muted-light: var(--muted-light);
-  --font-sans: var(--font-outfit), sans-serif;
   --font-serif: var(--font-serif);
 }
 
+html,
 body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  /* Prevent global scroll */
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans);
-  overflow: hidden;
-  /* Prevent document scroll */
-  overscroll-behavior-y: none;
-  /* Prevent rubber-banding */
 }
 
-/* Utilities */
-.glass-panel {
-  background: var(--surface);
-  /* Solid surface for minimal look */
-  border: 1px solid var(--border);
-  box-shadow: var(--glass-shadow);
-  /* Removed backdrop-filter for cleaner rendering */
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
 }
 
-.custom-scrollbar::-webkit-scrollbar {
-  width: 5px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-track {
+::-webkit-scrollbar-track {
   background: transparent;
 }
 
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  background-color: var(--border);
-  border-radius: 10px;
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 99px;
 }
 
-/* 3D Transform Utilities for Flashcards */
+::-webkit-scrollbar-thumb:hover {
+  background: var(--muted);
+}
+
+/* Utility Utilities */
+.glass-panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: var(--glass-shadow);
+}
+
 .perspective-1000 {
   perspective: 1000px;
 }
