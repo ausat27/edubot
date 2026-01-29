@@ -49,7 +49,7 @@ export default function ChatInterface({ className }: ChatInterfaceProps) {
         setIsLoading(true);
 
         try {
-            const res = await fetch("/chat", {
+            const res = await fetch("/api/chat", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -90,7 +90,7 @@ export default function ChatInterface({ className }: ChatInterfaceProps) {
     const resetChat = async () => {
         if (!conversationId) return;
         try {
-            await fetch("/reset", {
+            await fetch("/api/reset", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ conversation_id: conversationId }),

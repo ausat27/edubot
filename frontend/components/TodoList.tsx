@@ -18,7 +18,7 @@ export default function TodoList() {
 
     const fetchTasks = async () => {
         try {
-            const res = await fetch("/tasks");
+            const res = await fetch("/api/tasks");
             if (res.ok) {
                 const data = await res.json();
                 setTasks(data);
@@ -30,7 +30,7 @@ export default function TodoList() {
         e.preventDefault();
         if (!newTask.trim()) return;
         try {
-            const res = await fetch("/tasks", {
+            const res = await fetch("/api/tasks", {
                 method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ title: newTask }),
             });
             if (res.ok) {
@@ -44,7 +44,7 @@ export default function TodoList() {
     const toggleTask = async (id: number, completed: boolean) => {
         setTasks(tasks.map(t => t.id === id ? { ...t, completed: !completed } : t));
         try {
-            await fetch(`/tasks/${id}`, {
+            await fetch(`/api/tasks/${id}`, {
                 method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ completed: !completed }),
             });
         } catch (error) { fetchTasks(); }
@@ -53,7 +53,7 @@ export default function TodoList() {
     const deleteTask = async (id: number) => {
         setTasks(tasks.filter(t => t.id !== id));
         try {
-            await fetch(`/tasks/${id}`, { method: "DELETE" });
+            await fetch(`/api/tasks/${id}`, { method: "DELETE" });
         } catch (error) { fetchTasks(); }
     };
 
@@ -61,7 +61,7 @@ export default function TodoList() {
         // Optimistic update
         setTasks(tasks.filter(t => !t.completed));
         try {
-            await fetch("/tasks/completed", { method: "DELETE" });
+            await fetch("/api/tasks/completed", { method: "DELETE" });
         } catch (error) {
             console.error("Failed to clear tasks", error);
             fetchTasks(); // Revert on error
