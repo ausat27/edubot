@@ -59,10 +59,10 @@ export default function Home() {
         </div>
 
         {/* Main Content Grid */}
-        <div className="flex-1 h-full gap-6 grid grid-cols-1 xl:grid-cols-12 min-h-0">
+        <div className="flex-1 h-full gap-6 grid grid-cols-1 2xl:grid-cols-12 min-h-0">
 
           {/* Dynamic Center Panel */}
-          <div className="h-full xl:col-span-9 flex flex-col min-h-0">
+          <div className="h-full 2xl:col-span-8 flex flex-col min-h-0">
             {activeTab === "dashboard" ? (
               <ChatInterface className="h-full w-full" />
             ) : activeTab === "notes" ? (
@@ -79,7 +79,7 @@ export default function Home() {
           </div>
 
           {/* Right Panel - Tools */}
-          <div className="h-full xl:col-span-3 hidden xl:flex xl:flex-col xl:min-h-0">
+          <div className="h-full 2xl:col-span-4 hidden 2xl:flex 2xl:flex-col 2xl:min-h-0">
             <StudyTools />
           </div>
 
