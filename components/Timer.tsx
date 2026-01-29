@@ -39,12 +39,12 @@ export default function Timer() {
             </div>
 
             {/* Main Content: Flex Column on Mobile, Row on Desktop */}
-            <div className="flex-1 flex flex-col md:flex-row items-center w-full min-h-0 gap-4">
+            <div className="flex-1 flex flex-col md:flex-row items-center w-full min-h-0 gap-2 md:gap-4">
 
                 {/* Left: Timer & Main Controls */}
-                <div className="flex-1 w-full md:w-auto h-full flex flex-col items-center justify-center gap-6">
+                <div className="flex-1 w-full md:w-auto h-full flex flex-col items-center justify-center gap-2 md:gap-4">
                     {/* SVG Timer */}
-                    <div className="relative w-full max-w-[180px] aspect-square flex items-center justify-center">
+                    <div className="relative w-full max-w-[140px] md:max-w-[160px] 2xl:max-w-[180px] aspect-square flex items-center justify-center">
                         <svg className="w-full h-full transform -rotate-90" viewBox="0 0 208 208">
                             <circle
                                 cx="104"
@@ -84,9 +84,9 @@ export default function Timer() {
                     <div className="flex items-center gap-4">
                         <button
                             onClick={toggleTimer}
-                            className="w-12 h-12 rounded-full border border-border flex items-center justify-center hover:bg-surface-hover text-foreground transition-all active:scale-95 shadow-sm bg-background/50"
+                            className="w-10 h-10 md:w-12 md:h-12 rounded-full border border-border flex items-center justify-center hover:bg-surface-hover text-foreground transition-all active:scale-95 shadow-sm bg-background/50"
                         >
-                            {isActive ? <Pause className="w-5 h-5 fill-current" /> : <Play className="w-5 h-5 fill-current pl-1" />}
+                            {isActive ? <Pause className="w-4 h-4 md:w-5 md:h-5 fill-current" /> : <Play className="w-4 h-4 md:w-5 md:h-5 fill-current pl-1" />}
                         </button>
                         <button
                             onClick={resetTimer}
