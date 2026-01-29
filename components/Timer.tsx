@@ -31,7 +31,7 @@ export default function Timer() {
     };
 
     return (
-        <div className="h-full flex flex-col bg-surface border border-border rounded-2xl p-4 md:p-3 shadow-sm overflow-hidden min-h-[300px] md:min-h-0 relative">
+        <div className="flex flex-col bg-surface border border-border rounded-2xl p-4 md:p-3 shadow-sm overflow-hidden min-h-[300px] md:min-h-0 relative">
 
             {/* Header */}
             <div className="flex-shrink-0 flex justify-between items-start z-10 mb-2 md:mb-1">
