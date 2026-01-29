@@ -18,7 +18,7 @@ export default function Home() {
     <div className="h-[100dvh] w-full bg-background flex flex-col overflow-hidden">
 
       {/* Main Workspace Area - Added top padding for mobile to clear the menu button */}
-      <div className="flex-1 flex overflow-hidden relative gap-6 p-4 pb-4 pt-20 md:pt-4">
+      <div className="flex-1 flex overflow-hidden relative gap-4 p-3 pb-3 pt-20 md:pt-3">
 
         {/* Mobile Menu Button - Positioned to not overlap */}
         <button
@@ -59,7 +59,7 @@ export default function Home() {
         </div>
 
         {/* Main Content Grid */}
-        <div className="flex-1 h-full gap-6 grid grid-cols-1 lg:grid-cols-12 min-h-0">
+        <div className="flex-1 h-full gap-4 grid grid-cols-1 lg:grid-cols-12 min-h-0">
 
           {/* Dynamic Center Panel */}
           <div className="h-full lg:col-span-7 xl:col-span-8 2xl:col-span-9 flex flex-col min-h-0">
