@@ -52,7 +52,13 @@ class StorageInterface(ABC):
 
 class JsonStorageService(StorageInterface):
     def __init__(self, file_path="local_data.json"):
-        self.file_path = file_path
+        # On Vercel (or any read-only FS), we can only write to /tmp
+        # Check if we are in a serverless environment (often indicated by AWS_LAMBDA_FUNCTION_NAME or VERCEL)
+        if os.getenv("VERCEL") or os.getenv("AWS_LAMBDA_FUNCTION_NAME"):
+            self.file_path = f"/tmp/{file_path}"
+        else:
+            self.file_path = file_path
+            
         self._load_data()
 
     def _load_data(self):
