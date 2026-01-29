@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Educational Chatbot</title>
+  <link rel="stylesheet" href="{{ url_for('static', path='/style.css') }}">
+</head>
+<body>
+  <h2 style="text-align:center;">Educational Chatbot 🤖</h2>
+  <p class="bot">{{ response | safe }}</p>
+
+  <div class="chat-box">
+    {% if chat_history %}
+      {% for sender, message in chat_history %}
+  {% if sender == 'user' %}
+    <div class="message user-message">
+      <strong>You:</strong> {{ message }}
+    </div>
+  {% else %}
+    <div class="message bot-message">
+      <strong>Bot:</strong> {{ message | safe }}
+    </div>
+  {% endif %}
+{% endfor %}
+
+    {% else %}
+      <p class="bot"><i>Start the conversation below 👇</i></p>
+    {% endif %}
+  </div>
+
+  <form action="/chat" method="post" class="chat-form">
+    <input type="text" name="user_input" placeholder="Ask something..." required>
+    <button type="submit">Send</button>
+  </form>
+
+  <form method="post" action="/reset" class="reset">
+    <button type="submit">Reset Chat</button>
+  </form>
+</body>
+</html>

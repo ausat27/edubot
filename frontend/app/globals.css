@@ -1,0 +1,123 @@
+@import "tailwindcss";
+
+:root {
+  /* Default: Dark Mode (Minimal Calm) */
+  --background: #1c1c1c;
+  --foreground: #e0e0e0;
+
+  --primary: #8a9185;
+  /* Slightly lighter Olive for dark bg */
+  --primary-hover: #767b71;
+
+  --secondary: #4a4a4a;
+  /* Dark Taupe */
+
+  --surface: #262626;
+  /* Dark Grey Surface */
+  --surface-hover: #2f2f2f;
+
+  --border: #333333;
+  /* Dark Border */
+
+  --muted: #888888;
+  --muted-light: #404040;
+
+  --glass-bg: #262626;
+  --glass-border: #333333;
+  --glass-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+
+  --font-serif: "Georgia", "Times New Roman", serif;
+}
+
+/* Optional Light Mode Class */
+.light-mode {
+  --background: #f9f6f1;
+  --foreground: #2d2d2d;
+  --primary: #767b71;
+  --primary-hover: #5e6359;
+  --secondary: #d6cfc7;
+  --surface: #ffffff;
+  --surface-hover: #f7f5f0;
+  --border: #ebe5de;
+  --muted: #999999;
+  --muted-light: #e0e0e0;
+  --glass-bg: #ffffff;
+  --glass-border: #ebe5de;
+  --glass-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-secondary: var(--secondary);
+  --color-surface: var(--surface);
+  --color-surface-hover: var(--surface-hover);
+  --color-border: var(--border);
+  --color-muted: var(--muted);
+  --color-muted-light: var(--muted-light);
+  --font-sans: var(--font-outfit), sans-serif;
+  --font-serif: var(--font-serif);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  overflow: hidden;
+  /* Prevent document scroll */
+  overscroll-behavior-y: none;
+  /* Prevent rubber-banding */
+}
+
+/* Utilities */
+.glass-panel {
+  background: var(--surface);
+  /* Solid surface for minimal look */
+  border: 1px solid var(--border);
+  box-shadow: var(--glass-shadow);
+  /* Removed backdrop-filter for cleaner rendering */
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 5px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: var(--border);
+  border-radius: 10px;
+}
+
+/* 3D Transform Utilities for Flashcards */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.transform-style-3d {
+  transform-style: preserve-3d;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+}
+
+.rotate-y-180 {
+  transform: rotateY(180deg);
+}
+
+/* Hide Number Input Spinners */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
