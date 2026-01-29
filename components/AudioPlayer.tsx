@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { Play, Pause, Volume2, Volume1, SkipForward, Music } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 const TRACKS = [
     { name: "Heavy Rain", src: "/audio/rain.ogg" },
@@ -32,8 +33,7 @@ export default function AudioPlayer() {
                     await audioRef.current.play();
                     setError(false);
                 } catch (err) {
-                    console.error("Playback interrupted:", err);
-                    // Don't set error state for AbortError as it's often harmless during rapid switching
+                    // Autoplay restriction or interruption
                 }
             } else if (audioRef.current) {
                 audioRef.current.pause();
@@ -54,7 +54,7 @@ export default function AudioPlayer() {
     };
 
     return (
-        <div className="w-full max-w-5xl mx-auto flex items-center justify-between px-4 md:px-6 py-1.5 md:py-2">
+        <div className="w-full max-w-6xl mx-auto flex items-center justify-between px-3 md:px-6 py-2">
             <audio
                 ref={audioRef}
                 src={currentTrack.src}
@@ -63,58 +63,86 @@ export default function AudioPlayer() {
                 onError={() => setError(true)}
             />
 
-            {/* Premium Vinyl & Info */}
+            {/* Track Info & Vinyl */}
             <div className="flex items-center gap-3 md:gap-4 flex-1 min-w-0">
-                {/* Vinyl Record Animation - Sleeker */}
-                <div className={`relative w-10 h-10 md:w-12 md:h-12 flex-shrink-0 rounded-full bg-zinc-900 border border-zinc-700 shadow-xl flex items-center justify-center overflow-hidden transition-all duration-1000
-                    ${isPlaying ? "animate-[spin_4s_linear_infinite]" : ""}`}
-                    style={{ animationPlayState: isPlaying ? 'running' : 'paused' }}
+                <motion.div
+                    animate={{ rotate: isPlaying ? 360 : 0 }}
+                    transition={{
+                        repeat: Infinity,
+                        duration: 8,
+                        ease: "linear",
+                        repeatType: "loop"
+                    }}
+                    style={{ animationPlayState: isPlaying ? "running" : "paused" }}
+                    className="relative w-10 h-10 md:w-12 md:h-12 flex-shrink-0 rounded-full bg-black border border-border shadow-xl flex items-center justify-center overflow-hidden"
                 >
-                    {/* Realistic Grooves */}
-                    <div className="absolute inset-0 rounded-full bg-[repeating-radial-gradient(#111_0px,#111_2px,#222_3px,#222_4px)] opacity-60"></div>
-                    {/* Spectral Shine */}
-                    <div className="absolute inset-0 bg-gradient-to-tr from-white/10 via-transparent to-white/5 rounded-full pointer-events-none"></div>
-                    {/* Center Label */}
-                    <div className="absolute w-3 h-3 md:w-4 md:h-4 rounded-full bg-primary shadow-inner border border-white/20 z-10 flex items-center justify-center">
-                        <div className="w-0.5 h-0.5 md:w-1 md:h-1 bg-black/50 rounded-full"></div>
+                    <div className="absolute inset-0 rounded-full bg-[repeating-radial-gradient(#222_0px,#222_1px,#111_2px,#111_3px)] opacity-80" />
+                    <div className="absolute inset-0 bg-gradient-to-tr from-white/10 to-transparent pointer-events-none" />
+                    <div className="absolute w-3 h-3 md:w-4 md:h-4 bg-primary rounded-full shadow-inner border border-white/20 z-10 flex items-center justify-center">
+                        <div className="w-0.5 h-0.5 md:w-1 md:h-1 bg-black/60 rounded-full" />
                     </div>
-                </div>
+                </motion.div>
 
-                <div className="flex flex-col gap-0 md:gap-0.5 overflow-hidden">
-                    <h3 className="text-sm md:text-base font-medium text-foreground truncate max-w-[120px] md:max-w-[200px] leading-tight">
-                        {currentTrack.name}
-                    </h3>
-                    <div className="flex items-center gap-1.5">
-                        <span className="text-[9px] md:text-[10px] text-primary font-bold tracking-wider uppercase">Focus Mode</span>
+                <div className="flex flex-col overflow-hidden">
+                    <AnimatePresence mode="wait">
+                        <motion.h3
+                            key={currentTrack.name}
+                            initial={{ opacity: 0, y: 5 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -5 }}
+                            className="text-sm md:text-base font-medium text-foreground truncate leading-tight"
+                        >
+                            {currentTrack.name}
+                        </motion.h3>
+                    </AnimatePresence>
+                    <div className="flex items-center gap-1.5 h-3 md:h-4">
+                        <span className="text-[9px] md:text-[10px] text-primary/80 font-bold tracking-wider uppercase">Focus Audio</span>
                         {isPlaying && (
-                            <div className="hidden md:flex items-end gap-0.5 h-2.5">
-                                <div className="w-0.5 bg-primary/60 animate-[bounce_0.8s_infinite] h-1.5"></div>
-                                <div className="w-0.5 bg-primary/60 animate-[bounce_1.1s_infinite] h-full"></div>
-                                <div className="w-0.5 bg-primary/60 animate-[bounce_0.9s_infinite] h-1"></div>
+                            <div className="flex items-end gap-0.5 h-2.5">
+                                {[1, 2, 3].map((i) => (
+                                    <motion.div
+                                        key={i}
+                                        animate={{ height: ["20%", "100%", "20%"] }}
+                                        transition={{
+                                            repeat: Infinity,
+                                            duration: 0.8,
+                                            ease: "easeInOut",
+                                            delay: i * 0.1
+                                        }}
+                                        className="w-0.5 bg-primary rounded-full"
+                                    />
+                                ))}
                             </div>
                         )}
                     </div>
                 </div>
             </div>
 
-            {/* Center Controls */}
-            <div className="flex items-center gap-3 md:gap-6">
-                <button
+            {/* Controls */}
+            <div className="flex items-center gap-4 md:gap-6">
+                <motion.button
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
                     onClick={togglePlay}
-                    className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-foreground text-background flex items-center justify-center hover:scale-110 active:scale-95 transition-all shadow-lg ring-2 md:ring-4 ring-background/50"
+                    className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-foreground text-background flex items-center justify-center shadow-lg hover:shadow-xl transition-shadow"
                 >
                     {isPlaying ? <Pause className="w-4 h-4 md:w-5 md:h-5 fill-current" /> : <Play className="w-4 h-4 md:w-5 md:h-5 fill-current ml-0.5" />}
-                </button>
+                </motion.button>
 
-                <button onClick={nextTrack} className="group p-1.5 md:p-2 rounded-full hover:bg-surface-hover text-muted hover:text-foreground transition-all">
-                    <SkipForward className="w-4 h-4 md:w-5 md:h-5 group-hover:translate-x-1 transition-transform" />
-                </button>
+                <motion.button
+                    whileHover={{ x: 2 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={nextTrack}
+                    className="p-2 text-muted hover:text-foreground transition-colors"
+                >
+                    <SkipForward className="w-5 h-5 md:w-6 md:h-6" />
+                </motion.button>
             </div>
 
-            {/* Volume & Extras - Hidden on Mobile */}
+            {/* Volume (Desktop) */}
             <div className="hidden md:flex items-center gap-4 flex-1 justify-end">
-                <div className="flex items-center gap-3 w-40 group bg-surface/40 hover:bg-surface/80 backdrop-blur-sm p-2.5 rounded-full border border-white/5 transition-all">
-                    <Volume1 className="w-4 h-4 text-muted group-hover:text-foreground transition-colors" />
+                <div className="group flex items-center gap-3 bg-surface/50 hover:bg-surface border border-transparent hover:border-border rounded-full py-2 px-4 transition-all w-48">
+                    <Volume2 className="w-4 h-4 text-muted group-hover:text-primary transition-colors" />
                     <input
                         type="range"
                         min="0"
@@ -122,7 +150,7 @@ export default function AudioPlayer() {
                         step="0.05"
                         value={volume}
                         onChange={(e) => setVolume(parseFloat(e.target.value))}
-                        className="w-full h-1.5 bg-secondary/30 rounded-full appearance-none [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-primary transition-all cursor-pointer hover:h-2"
+                        className="w-full h-1.5 bg-border rounded-full appearance-none [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-primary cursor-pointer hover:h-2 transition-all"
                     />
                 </div>
             </div>
