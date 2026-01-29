@@ -39,12 +39,12 @@ export default function Timer() {
             </div>
 
             {/* Main Content: Flex Column on Mobile, Row on Desktop */}
-            <div className="flex-1 flex flex-col md:flex-row items-center w-full min-h-0 gap-2 md:gap-1">
+            <div className="flex-1 flex flex-col md:flex-row items-center justify-center w-full min-h-0 gap-2 md:gap-4 overflow-hidden">
 
-                {/* Left: Timer & Main Controls */}
-                <div className="flex-1 w-full md:w-auto h-full flex flex-col items-center justify-center gap-2 md:gap-1">
-                    {/* SVG Timer */}
-                    <div className="relative w-full max-w-[140px] md:max-w-[100px] 2xl:max-w-[180px] aspect-square flex items-center justify-center">
+                {/* Left: Timer & Main Controls - Scales with container */}
+                <div className="flex-1 w-full md:w-auto h-full flex flex-col items-center justify-center gap-2">
+                    {/* Fluid SVG Timer - Scales based on available height/width */}
+                    <div className="relative w-full h-[60%] md:h-[70%] max-h-[220px] aspect-square flex items-center justify-center">
                         <svg className="w-full h-full transform -rotate-90" viewBox="0 0 208 208">
                             <circle
                                 cx="104"
@@ -67,6 +67,7 @@ export default function Timer() {
                                 strokeLinecap="round"
                                 className="text-primary transition-all duration-1000 ease-linear"
                             />
+                            {/* SVG Text - No changes needed as it scales with SVG viewBox */}
                             <text
                                 x="104"
                                 y="112"
@@ -80,25 +81,25 @@ export default function Timer() {
                         </svg>
                     </div>
 
-                    {/* Play Controls */}
-                    <div className="flex items-center gap-4">
+                    {/* Play Controls - Fixed size for touch targets, but compact layout */}
+                    <div className="flex items-center gap-3 md:gap-4 h-[15%] min-h-[40px]">
                         <button
                             onClick={toggleTimer}
-                            className="w-10 h-10 md:w-12 md:h-12 rounded-full border border-border flex items-center justify-center hover:bg-surface-hover text-foreground transition-all active:scale-95 shadow-sm bg-background/50"
+                            className="aspect-square h-full max-h-[50px] rounded-full border border-border flex items-center justify-center hover:bg-surface-hover text-foreground transition-all active:scale-95 shadow-sm bg-background/50"
                         >
-                            {isActive ? <Pause className="w-4 h-4 md:w-5 md:h-5 fill-current" /> : <Play className="w-4 h-4 md:w-5 md:h-5 fill-current pl-1" />}
+                            {isActive ? <Pause className="w-[40%] h-[40%] fill-current" /> : <Play className="w-[40%] h-[40%] fill-current pl-[5%]" />}
                         </button>
                         <button
                             onClick={resetTimer}
-                            className="w-12 h-12 rounded-full border border-border flex items-center justify-center hover:bg-surface-hover text-muted hover:text-foreground transition-all shadow-sm bg-background/50"
+                            className="aspect-square h-full max-h-[50px] rounded-full border border-border flex items-center justify-center hover:bg-surface-hover text-muted hover:text-foreground transition-all shadow-sm bg-background/50"
                         >
-                            <RotateCcw className="w-5 h-5" />
+                            <RotateCcw className="w-[40%] h-[40%]" />
                         </button>
                     </div>
                 </div>
 
-                {/* Right: Settings Panel */}
-                <div className="flex-shrink-0 w-full md:w-auto md:h-full md:border-l md:border-t-0 border-t border-border/50 pt-4 md:pt-0 md:pl-4 flex flex-row md:flex-col items-center md:justify-center gap-3">
+                {/* Right: Settings Panel - Collapsible/Compact */}
+                <div className="flex-shrink-0 w-full md:w-auto md:h-full md:border-l md:border-t-0 border-t border-border/50 pt-2 md:pt-0 md:pl-4 flex flex-row md:flex-col items-center md:justify-center gap-2 overflow-hidden">
                     <span className="hidden md:inline text-[10px] text-muted uppercase tracking-widest opacity-50 mb-1">Presets</span>
 
                     {/* Presets List */}
