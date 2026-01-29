@@ -42,7 +42,7 @@ export default function StudyTools() {
 
                 {/* Focus Tab Content */}
                 <div className={`h-full flex flex-col gap-2 md:gap-3 p-4 md:p-6 overflow-y-auto md:overflow-hidden ${activeTab === "focus" ? "block" : "hidden"}`}>
-                    <div className="flex-shrink-0 md:h-[30%] min-h-min">
+                    <div className="flex-shrink-0 min-h-min bg-surface rounded-2xl overflow-hidden">
                         <Timer />
                     </div>
                     <div className="flex-1 min-h-[300px] md:min-h-0 overflow-hidden">
