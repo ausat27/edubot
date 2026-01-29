@@ -31,20 +31,20 @@ export default function Timer() {
     };
 
     return (
-        <div className="h-full flex flex-col bg-surface border border-border rounded-2xl p-4 shadow-sm overflow-hidden min-h-[300px] md:min-h-0 relative">
+        <div className="h-full flex flex-col bg-surface border border-border rounded-2xl p-4 md:p-3 shadow-sm overflow-hidden min-h-[300px] md:min-h-0 relative">
 
             {/* Header */}
-            <div className="flex-shrink-0 flex justify-between items-start z-10 mb-2">
+            <div className="flex-shrink-0 flex justify-between items-start z-10 mb-2 md:mb-1">
                 <h3 className="text-lg font-medium text-foreground">Focus Timer</h3>
             </div>
 
             {/* Main Content: Flex Column on Mobile, Row on Desktop */}
-            <div className="flex-1 flex flex-col md:flex-row items-center w-full min-h-0 gap-2 md:gap-4">
+            <div className="flex-1 flex flex-col md:flex-row items-center w-full min-h-0 gap-2 md:gap-3">
 
                 {/* Left: Timer & Main Controls */}
-                <div className="flex-1 w-full md:w-auto h-full flex flex-col items-center justify-center gap-2 md:gap-4">
+                <div className="flex-1 w-full md:w-auto h-full flex flex-col items-center justify-center gap-2 md:gap-2">
                     {/* SVG Timer */}
-                    <div className="relative w-full max-w-[140px] md:max-w-[160px] 2xl:max-w-[180px] aspect-square flex items-center justify-center">
+                    <div className="relative w-full max-w-[140px] md:max-w-[120px] 2xl:max-w-[180px] aspect-square flex items-center justify-center">
                         <svg className="w-full h-full transform -rotate-90" viewBox="0 0 208 208">
                             <circle
                                 cx="104"
