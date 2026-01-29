@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import ReactMarkdown from "react-markdown";
 import { Send, Bot, User, Loader2, Sparkles, ChevronDown, RefreshCw, Save } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface Message {
     role: "user" | "assistant";
@@ -102,40 +103,47 @@ export default function ChatInterface({ className }: ChatInterfaceProps) {
     };
 
     return (
-        <div className={`flex flex-col h-full bg-surface border border-border shadow-sm rounded-3xl overflow-hidden ${className}`}>
+        <div className={`flex flex-col h-full bg-surface/50 backdrop-blur-sm border border-border shadow-sm rounded-2xl overflow-hidden ${className}`}>
             {/* Header */}
-            <header className="flex items-center justify-between px-4 py-2 md:py-2.5 border-b border-border/50 bg-background/50">
-                <div className="flex items-center gap-2">
-                    <div className="p-1 border border-border rounded-full bg-surface">
-                        <Sparkles className="w-3.5 h-3.5 text-primary" />
+            <header className="flex-shrink-0 flex items-center justify-between px-4 py-3 border-b border-border/50 bg-background/50 backdrop-blur-md z-10">
+                <div className="flex items-center gap-3">
+                    <div className="p-1.5 border border-border rounded-lg bg-surface shadow-sm">
+                        <Sparkles className="w-4 h-4 text-primary" />
                     </div>
                     <div>
-                        <h1 className="text-sm md:text-base font-medium text-foreground leading-tight">Study Session</h1>
+                        <h1 className="text-sm font-semibold text-foreground leading-tight">Study Buddy</h1>
                         <div className="relative">
                             <button
                                 onClick={() => setIsModeOpen(!isModeOpen)}
-                                className="flex items-center gap-1 text-[9px] md:text-[10px] text-muted hover:text-primary transition-colors font-medium tracking-wide uppercase"
+                                className="flex items-center gap-1 text-[10px] text-muted hover:text-primary transition-colors font-medium tracking-wide uppercase"
                             >
-                                {selectedMode} MODE
-                                <ChevronDown className="w-2.5 h-2.5" />
+                                {selectedMode}
+                                <ChevronDown className="w-3 h-3" />
                             </button>
 
-                            {isModeOpen && (
-                                <div className="absolute top-full left-0 mt-1 w-40 bg-surface rounded-lg shadow-lg border border-border py-1 z-50 animate-in fade-in zoom-in-95 duration-200">
-                                    {MODES.map((mode) => (
-                                        <button
-                                            key={mode}
-                                            onClick={() => {
-                                                setSelectedMode(mode);
-                                                setIsModeOpen(false);
-                                            }}
-                                            className={`w-full text-left px-4 py-2 text-xs hover:bg-surface-hover hover:text-primary transition-colors ${selectedMode === mode ? 'text-primary font-bold bg-surface-hover' : 'text-foreground'}`}
-                                        >
-                                            {mode}
-                                        </button>
-                                    ))}
-                                </div>
-                            )}
+                            <AnimatePresence>
+                                {isModeOpen && (
+                                    <motion.div
+                                        initial={{ opacity: 0, y: 5 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        exit={{ opacity: 0, y: 5 }}
+                                        className="absolute top-full left-0 mt-2 w-40 bg-surface rounded-xl shadow-xl border border-border py-1 z-50 overflow-hidden"
+                                    >
+                                        {MODES.map((mode) => (
+                                            <button
+                                                key={mode}
+                                                onClick={() => {
+                                                    setSelectedMode(mode);
+                                                    setIsModeOpen(false);
+                                                }}
+                                                className={`w-full text-left px-4 py-2 text-xs hover:bg-surface-hover hover:text-primary transition-colors ${selectedMode === mode ? 'text-primary font-bold bg-surface-hover' : 'text-foreground'}`}
+                                            >
+                                                {mode}
+                                            </button>
+                                        ))}
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
                         </div>
                     </div>
                 </div>
@@ -145,128 +153,111 @@ export default function ChatInterface({ className }: ChatInterfaceProps) {
                             if (messages.length === 0) return;
                             try {
                                 const noteContent = messages.map(m => `**${m.role === 'user' ? 'User' : 'Assistant'}**: ${m.message}`).join('\n\n');
-                                const res = await fetch("/api/notes", {
-                                    method: "POST",
-                                    headers: { "Content-Type": "application/json" },
-                                    body: JSON.stringify({
-                                        title: `Study Session - ${new Date().toLocaleString()}`,
-                                        content: noteContent
-                                    }),
-                                });
-                                if (res.ok) {
-                                    alert("Chat saved as note!");
-                                } else {
-                                    throw new Error("Failed to save note");
-                                }
-                            } catch (error) {
-                                console.error("Error saving note:", error);
-                                alert("Failed to save note.");
-                            }
+                                const res = await fetch("/api/notes", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ title: `Study Session - ${new Date().toLocaleString()}`, content: noteContent }), });
+                                if (res.ok) alert("Chat saved as note!");
+                            } catch (e) { alert("Failed to save note."); }
                         }}
-                        className="p-1.5 text-muted hover:text-primary transition-all"
+                        className="p-2 text-muted hover:text-primary hover:bg-surface-hover rounded-lg transition-all"
                         title="Save as Note"
                     >
                         <Save className="w-4 h-4" />
                     </button>
                     <button
                         onClick={resetChat}
-                        className="p-1.5 text-muted hover:text-foreground transition-all"
+                        className="p-2 text-muted hover:text-foreground hover:bg-surface-hover rounded-lg transition-all"
                         title="Reset Chat"
                     >
                         <RefreshCw className="w-4 h-4" />
                     </button>
                 </div>
-            </header >
+            </header>
 
             {/* Chat Area */}
-            <main className="flex-1 overflow-y-auto p-3 md:p-4 space-y-4 md:space-y-6 custom-scrollbar bg-background">
-                {
-                    messages.length === 0 ? (
-                        <div className="flex flex-col items-center justify-center h-full text-center text-muted space-y-3">
-                            <div className="w-12 h-12 md:w-16 md:h-16 border border-border rounded-full flex items-center justify-center bg-white shadow-sm">
-                                <Sparkles className="w-5 h-5 md:w-6 md:h-6 text-secondary" />
-                            </div>
-                            <div className="space-y-1">
-                                <h2 className="text-lg md:text-xl text-foreground">Ready to learn?</h2>
-                                <p className="text-[10px] md:text-xs opacity-70 max-w-xs mx-auto font-light">
-                                    I&apos;m set to {selectedMode} mode. Ask me anything.
-                                </p>
-                            </div>
+            <main className="flex-1 overflow-y-auto p-4 space-y-6 custom-scrollbar scroll-smooth">
+                {messages.length === 0 ? (
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        className="flex flex-col items-center justify-center h-full text-center text-muted space-y-4"
+                    >
+                        <div className="w-16 h-16 border border-border rounded-2xl flex items-center justify-center bg-surface/50 shadow-inner">
+                            <Sparkles className="w-8 h-8 text-primary/50" />
                         </div>
-                    ) : (
-                        messages.map((msg, idx) => (
-                            <div
-                                key={idx}
-                                className={`flex w-full ${msg.role === "user" ? "justify-end" : "justify-start"}`}
+                        <div className="space-y-1">
+                            <h2 className="text-xl font-medium text-foreground">Ready to learn?</h2>
+                            <p className="text-xs opacity-60">Ask me anything about your coursework.</p>
+                        </div>
+                    </motion.div>
+                ) : (
+                    <div className="space-y-6">
+                        <AnimatePresence mode="popLayout">
+                            {messages.map((msg, idx) => (
+                                <motion.div
+                                    key={idx}
+                                    initial={{ opacity: 0, y: 20, scale: 0.98 }}
+                                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                                    transition={{ duration: 0.3, ease: "easeOut" }}
+                                    className={`flex w-full ${msg.role === "user" ? "justify-end" : "justify-start"}`}
+                                >
+                                    <div className={`flex max-w-[85%] md:max-w-[80%] gap-3 ${msg.role === "user" ? "flex-row-reverse" : "flex-row"}`}>
+                                        <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center border shadow-sm ${msg.role === "user" ? "bg-foreground text-background border-transparent" : "bg-surface border-border text-primary"}`}>
+                                            {msg.role === "user" ? <User className="w-4 h-4" /> : <Bot className="w-4 h-4" />}
+                                        </div>
+                                        <div className={`p-4 rounded-2xl text-sm leading-relaxed shadow-sm ${msg.role === "user" ? "bg-primary text-white rounded-tr-sm" : "bg-surface border border-border text-foreground rounded-tl-sm"}`}>
+                                            {msg.role === "assistant" ? (
+                                                <div className="prose prose-sm max-w-none dark:prose-invert prose-p:leading-relaxed prose-pre:bg-black/20 prose-pre:border prose-pre:border-white/10">
+                                                    <ReactMarkdown>{msg.message}</ReactMarkdown>
+                                                </div>
+                                            ) : (
+                                                msg.message
+                                            )}
+                                        </div>
+                                    </div>
+                                </motion.div>
+                            ))}
+                        </AnimatePresence>
+
+                        {isLoading && (
+                            <motion.div
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                className="flex justify-start w-full"
                             >
-                                <div className={`flex max-w-[95%] md:max-w-[85%] gap-2 md:gap-3 ${msg.role === "user" ? "flex-row-reverse" : "flex-row"}`}>
-                                    <div
-                                        className={`flex-shrink-0 w-6 h-6 md:w-7 md:h-7 rounded-full flex items-center justify-center border border-border ${msg.role === "user"
-                                            ? "bg-foreground text-background"
-                                            : "bg-surface text-primary"
-                                            }`}
-                                    >
-                                        {msg.role === "user" ? <User className="w-3 h-3" /> : <Bot className="w-3 h-3" />}
+                                <div className="flex items-center gap-3">
+                                    <div className="w-8 h-8 rounded-full border border-border bg-surface flex items-center justify-center">
+                                        <Loader2 className="w-4 h-4 text-muted animate-spin" />
                                     </div>
-                                    <div
-                                        className={`p-3 md:p-4 rounded-2xl text-sm leading-relaxed shadow-sm ${msg.role === "user"
-                                            ? "bg-primary text-white rounded-tr-sm"
-                                            : "bg-surface border border-border text-foreground rounded-tl-sm"
-                                            }`}
-                                    >
-                                        {msg.role === "assistant" ? (
-                                            <div className="prose prose-sm max-w-none text-foreground prose-headings:text-foreground prose-p:text-foreground prose-strong:text-foreground prose-li:text-foreground prose-ol:text-foreground prose-ul:text-foreground prose-a:text-primary font-medium">
-                                                <ReactMarkdown>{msg.message}</ReactMarkdown>
-                                            </div>
-                                        ) : (
-                                            msg.message
-                                        )}
+                                    <div className="px-4 py-2 rounded-2xl bg-surface/50 border border-border/50 rounded-tl-sm">
+                                        <span className="text-xs text-muted flex gap-1">Thinking<span className="animate-pulse">...</span></span>
                                     </div>
                                 </div>
-                            </div>
-                        ))
-                    )
-                }
-                {
-                    isLoading && (
-                        <div className="flex justify-start w-full animate-pulse">
-                            <div className="flex items-center gap-2 md:gap-3">
-                                <div className="w-6 h-6 md:w-7 md:h-7 rounded-full border border-border bg-surface flex items-center justify-center">
-                                    <Bot className="w-3 h-3 text-muted" />
-                                </div>
-                                <div className="bg-surface border border-border px-3 py-2 rounded-2xl rounded-tl-sm">
-                                    <span className="text-[10px] md:text-xs text-muted italic">Thinking...</span>
-                                </div>
-                            </div>
-                        </div>
-                    )
-                }
-                <div ref={messagesEndRef} />
-            </main >
+                            </motion.div>
+                        )}
+                        <div ref={messagesEndRef} className="h-1" />
+                    </div>
+                )}
+            </main>
 
             {/* Input Area */}
-            <footer className="p-3 md:p-4 bg-surface border-t border-border" >
-                <form
-                    onSubmit={sendMessage}
-                    className="relative flex items-center gap-2"
-                >
+            <footer className="flex-shrink-0 p-4 bg-background/50 border-t border-border backdrop-blur-md">
+                <form onSubmit={sendMessage} className="relative flex items-center gap-3 max-w-4xl mx-auto w-full">
                     <input
                         type="text"
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
                         placeholder="Type a message..."
-                        className="flex-1 p-2.5 pr-8 rounded-lg border border-border bg-background focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all placeholder-muted text-foreground font-light text-xs md:text-sm"
+                        className="flex-1 p-3.5 pr-12 rounded-xl border border-border bg-surface/50 focus:bg-surface focus:outline-none focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all placeholder:text-muted/50 text-foreground text-sm shadow-sm"
                         disabled={isLoading}
                     />
                     <button
                         type="submit"
                         disabled={!input.trim() || isLoading}
-                        className="absolute right-2 p-1 text-primary hover:text-foreground disabled:opacity-30 transition-colors"
+                        className="absolute right-2 p-2 bg-primary text-white rounded-lg hover:bg-primary-hover disabled:opacity-50 disabled:hover:bg-primary transition-all shadow-sm active:scale-95"
                     >
-                        <Send className="w-3.5 h-3.5" />
+                        <Send className="w-4 h-4" />
                     </button>
                 </form>
-            </footer >
-        </div >
+            </footer>
+        </div>
     );
 }
